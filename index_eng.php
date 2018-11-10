@@ -36,18 +36,18 @@
 		<div class="row">
 			<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4" id="contenedorOpciones">
 				<div id="contenedorSelectorRuta">
-					<label class="label" for="cmbRuta">Selecciona la ruta</label>
+					<label class="label" for="cmbRuta">Pick a Route</label>
 					<select class="form-control" name="cmbRuta" id="cmbRuta">
-						<option value="0">Selecciona Una Opción</option>
+						<option value="0">Pick an option</option>
 					</select>
 				</div>
 				<div id="contenedorSelectorCamion">
-					<label class="label" for="cmbCamion">Selecciona Camión</label>
+					<label class="label" for="cmbCamion">Pick a Bus</label>
 					<select class="form-control" name="cmbCamion" id="cmbCamion">
 						
 					</select>
 					<br/>
-					<button class="btn btn-primary" id="btnMostrarFotografias">Mostrar Fotografias</button>
+					<button class="btn btn-primary" id="btnMostrarFotografias">Show Photos</button>
 				</div>
 			</div>
 			<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
@@ -116,7 +116,7 @@
 			success: function(result){			
         	var respuesta = result;
 			var dato = respuesta.split('|');
-			var cadena = '<option value="0">Selecciona Una Opción</option>';
+			var cadena = '<option value="0">Pick an option</option>';
 			for(var x = 0; x < dato.length-1; x++){
 				cadena += '<option value="'+dato[x].split(';')[0]+'">'+dato[x].split(';')[1]+'</option>';
 			}

@@ -1,8 +1,28 @@
+body{
+	overflow-x: hidden;
+}
 #bannerPrincipal{
-	background-image: url("../img/noche.jpg");
-	background-size: cover;
-	height: 100px;	
-	text-align: center;
+	height: 75px;	
+	text-align: left;
+	margin-left: -15px;
+	width: 100%;
+}
+#divBordes{
+	border-bottom-color: rgba(72,168,160,1);
+	border-bottom-width: 15px;
+	border-bottom-style: solid;
+	border-top-color: rgb(51,51,51);
+	border-top-width: 30px;
+	border-top-style: solid;
+	width: 110%;
+	margin-left: -15px;
+}
+
+
+#bannerPrincipal img{
+	position: absolute;
+	top:-25px;
+	left: 20px;
 }
 
 .label{
@@ -23,14 +43,17 @@
 
 #contenedorModalFotografias{
 	position: absolute;
-	width: 80%;
-	margin-left: 10%;
+	width: 40%;
+	margin-left: 30%;
 	margin-right: 10%;
 	background-color: #fff;
 	z-index: 10;
 	min-height: 500px;
-	top: 10%;
+	top: 5vh;
 	left: 0px;
+	border-radius: 20px;
+	overflow-y: scroll;
+	max-height: 90vh;
 }
 
 .overlayModal{
@@ -48,12 +71,18 @@
 	display: none;
 }
 #mapContainer{
-	width: 100%;
-	height: calc(100vh - 100px);
+	width: 95%;
+	height: calc(100vh - 120px);
 }
 
 .fotoCamion{
-	width: 45%;
-	display: inline-block;
+	width: 90%;
+	display: block;
 	margin: 20px;
+}
+
+.lngSelector{
+	position: absolute;
+	top: 20px;
+	right: 15px;
 }
