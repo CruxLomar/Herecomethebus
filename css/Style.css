@@ -23,3 +23,38 @@
 	width: 100%;
 	height: 100%;
 }
+
+#contenedorSelectorCamion{
+	display: none;
+}
+
+#contenedorOpciones{
+	font-size: 20px;
+}
+
+#contenedorModalFotografias{
+	position: absolute;
+	width: 80%;
+	margin-left: 10%;
+	margin-right: 10%;
+	background-color: #fff;
+	z-index: 10;
+	min-height: 500px;
+	top: 10%;
+	left: 0px;
+}
+
+.overlayModal{
+	width: 100vw;
+	height: 100vh;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	background-color: rgba(50,50,50,.50);
+	z-index: 8;
+	cursor: pointer;
+}
+
+.modalFotografias{
+	display: none;
+}
