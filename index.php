@@ -22,15 +22,11 @@
 </head>
 <body>
 	<header>
-		<nav class="menuSuperior">
-			<img src="img/HCTBBANER.svg" alt="why">
-			<h1>Here comes the bus!</h1>
-		</nav>
 	</header>
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-xs-12" id="bannerPrincipal">
-				<h1 class="textoBannerPrincipal">Este es el banner principal</h1>
+				<img src="img/HCTBBANER.svg" alt="Here comes the bus!" style="max-height: 100px">
 			</div>
 		</div>
 		<div class="row">
@@ -51,20 +47,22 @@
 				</div>
 			</div>
 			<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
-				 <div style="width: 640px; height: 480px" id="mapContainer"></div>
+				 <div id="mapContainer"></div>
 
 			</div>
 		</div>
 	</div>
 	<div class="overlayModal modalFotografias"></div>
 	<div class="modalFotografias" id="contenedorModalFotografias"></div>
+	<div id="pruebitas"></div>
 </body>
 <!--FUNCIONES-->
 <script type="text/javascript">
 	$(document).ready(function(){
-		cargarMapa();
+		iniciarHiloMapa();
 		cargarRutas();
 		cargarCamiones(1);
+		hiloCamion();
 
 		$("#cmbRuta").on("change", function(){
 			var ruta = $(this).val();
@@ -83,7 +81,13 @@
 		});
 
 		$("#btnMostrarFotografias").on("click", function(){
-			$(".modalFotografias").fadeIn();
+			var camion = $("#cmbCamion").val();
+			if(camion == 0){
+				alert('Selecciona un camión');
+			}else{
+				$(".modalFotografias").fadeIn();
+				obtenerFotografias(camion);
+			}
 		});
 	});
 
@@ -115,6 +119,22 @@
 			$('#cmbCamion').append(cadena);
     	}});		
 	}
+	function cargarUbicacionCamiones(map, ruta){
+		$.ajax({url: "src/funciones.php",
+			type: "POST",
+			data: {"funcion": "cargarUbicacionCamiones", "ruta": ruta},
+			success: function(result){			
+        	var respuesta = result;
+			var dato = respuesta.split('|');
+			for(var x = 0; x < dato.length-1; x++){
+				//alert(dato[x]);
+				var latitud = dato[x].split(';')[1];
+				var longitud = dato[x].split(';')[2];
+				cargarMarca(map, latitud, longitud);
+			}
+    	}});	
+	}
+
 	function obtenerFotografias(camion){
 		$.ajax({url: "src/funciones.php",
 			type: "POST",
@@ -124,11 +144,49 @@
 			var dato = respuesta.split('|');
 			var cadena = '';
 			for(var x = 0; x < dato.length-1; x++){
-				cadena += '<option value="'+dato[x].split(';')[0]+'">'+dato[x].split(';')[1]+'</option>';
+				cadena += '<img src="file/'+dato[x]+'" class="fotoCamion">';
 			}
 			$('#contenedorModalFotografias').empty();
-			$('#cmbCamion').append(cadena);
+			$('#contenedorModalFotografias').append(cadena);
     	}});		
+	}
+	function actualizarPosicionCamion(camion, latitud, longitud){
+		$.ajax({url: "src/funciones.php",
+			type: "POST",
+			data: {"funcion": "actualizarPosicionCamion", "camion": camion, "latitud": latitud, "longitud": longitud},
+			success: function(result){			
+    	}});		
+	}
+
+	var listaDir = [{latitud:21.06188,longitud:-101.57984},
+					{latitud:21.06074,longitud:-101.58086},
+					{latitud:21.05992,longitud:-101.58151},
+					{latitud:21.0595,longitud:-101.58208},
+					{latitud:21.06001,longitud:-101.58267},
+					{latitud:21.06062,longitud:-101.58351},
+					{latitud:21.06163,longitud:-101.58476},
+					{latitud:21.06261,longitud:-101.58599},
+					{latitud:21.06324,longitud:-101.58681},
+					{latitud:21.06381,longitud:-101.58745},
+					{latitud:21.0641,longitud:-101.58727},
+					{latitud:21.06384,longitud:-101.58664},
+					{latitud:21.06351,longitud:-101.58571},
+					{latitud:21.06313,longitud:-101.58411},
+					{latitud:21.06269,longitud:-101.58254},
+					{latitud:21.0625,longitud:-101.58169},
+					{latitud:21.06224,longitud:-101.58076},
+					{latitud:21.06194,longitud:-101.57984}];
+
+	var flag = 0;					
+	function hiloCamion(){
+		actualizarPosicionCamion(1,listaDir[flag]["latitud"], listaDir[flag]["longitud"]);
+		flag = flag + 1;
+		if(flag < listaDir.length){
+			setTimeout("hiloCamion()",2500);
+		}else{
+			flag = 0;
+			setTimeout("hiloCamion()",2500);
+		}
 	}
 </script>
 <!--FUNCIONES MAPAS-->
@@ -147,6 +205,7 @@ var defaultLayers = platform.createDefaultLayers({
 });
 
 //Step 2: initialize a map  - not specificing a location will give a whole world view.
+$("#mapContainer").empty();
 var map = new H.Map(document.getElementById('mapContainer'),
   defaultLayers.normal.map, {pixelRatio: pixelRatio});
 
@@ -160,21 +219,32 @@ var ui = H.ui.UI.createDefault(map, defaultLayers);
 
 // Now use the map as required...
 moverUTL(map);
+var ruta = $("#cmbRuta").val();
+if(ruta != 0){
+	cargarUbicacionCamiones(map, ruta);
+}/*
 var test = [{lat: 21.07390, long:-101.585796},{lat: 21.06390, long:-101.585796},{lat: 21.05390, long:-101.585796}];
 	for(var x = 0; x<3; x++){
 		cargarMarca(map, test[x]["lat"], test[x]["long"]);
-	}
+	}*/
 }
 
-function cargarMarca(map, latitud, longitud){	
+function cargarMarca(map, latitud, longitud){
 		var position = {lat:latitud, lng:longitud};
-		marker = new H.map.Marker(position);
-		map.addObject(marker);
+			marker = new H.map.Marker(position);
+			map.addObject(marker);	
+		
 }
 
 function moverUTL(map){
 	  map.setCenter({lat:21.06386, lng:-101.585796});
 	  map.setZoom(14);
 	}
+
+function iniciarHiloMapa(){
+	cargarMapa();
+	setTimeout("iniciarHiloMapa()",5000);
+}
+
 </script>
 </html>
